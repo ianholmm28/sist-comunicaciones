@@ -10,6 +10,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "cli-table3": "^0.6.5",
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "pg": "^8.12.0"

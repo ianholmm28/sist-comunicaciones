@@ -17,13 +17,7 @@ async function insertData() {
     // Insert data into the empleados table
     await client.query(`
       INSERT INTO empleados (nombre, edad, puesto) VALUES
-      ('Juan Pérez', 30, 'Desarrollador'),
-      ('Ana García', 25, 'Diseñadora'),
-      ('Luis Martínez', 40, 'Gerente'),
-      ('María López', 28, 'Analista'),
-      ('Pedro Fernández', 35, 'Consultor'),
-      ('Laura Gómez', 32, 'Marketing'),
-      ('Carlos Ruiz', 45, 'Vendedor');
+      ('Chatgpt', 4 , 'programador');
     `);
 
     console.log('Data inserted successfully.');
