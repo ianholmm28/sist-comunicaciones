@@ -31,45 +31,69 @@ app.get('/read-data', async (req, res) => {
         
         // HTML con CSS embebido
         const html = `
-            <!DOCTYPE html>
-            <html lang="es">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Tabla de Empleados</title>
-                <style>
-                    body {
-                        font-family: Arial, sans-serif;
-                        background-color: #f4f4f4;
-                        color: #333;
-                        text-align: center;
-                        padding: 20px;
-                    }
-                    h1 {
-                        color: #555;
-                    }
-                    table {
-                        width: 80%;
-                        margin: 20px auto;
-                        border-collapse: collapse;
-                        box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
-                    }
-                    th, td {
-                        padding: 10px;
-                        border: 1px solid #ddd;
-                        text-align: left;
-                    }
-                    th {
-                        background-color: #f2f2f2;
-                    }
-                    tr:nth-child(even) {
-                        background-color: #f9f9f9;
-                    }
-                </style>
-            </head>
-            <body>
-                <h1>Lista de Empleados</h1>
-                <table>
+        <!DOCTYPE html>
+        <html lang="es">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Tabla de Empleados</title>
+            <style>
+                body {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    background-color: #f0f4f8;
+                    color: #333;
+                    text-align: center;
+                    padding: 20px;
+                }
+                h1 {
+                    color: #444;
+                    margin-bottom: 20px;
+                }
+                .table-container {
+                    width: 90%;
+                    margin: 0 auto;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                    border-radius: 8px;
+                    overflow: hidden;
+                    background-color: #fff;
+                }
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+                th, td {
+                    padding: 12px 15px;
+                    border-bottom: 1px solid #ddd;
+                    text-align: left;
+                }
+                th {
+                    background-color: #007bff;
+                    color: #fff;
+                    text-transform: uppercase;
+                    letter-spacing: 0.03em;
+                }
+                tr:nth-child(even) {
+                    background-color: #f9f9f9;
+                }
+                tr:hover {
+                    background-color: #f1f1f1;
+                }
+                input[type="text"] {
+                    margin: 20px 0;
+                    padding: 10px;
+                    width: 50%;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                    box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.1);
+                }
+            </style>
+        </head>
+        <body>
+            <h1>Lista de Empleados</h1>
+            <input type="text" id="search" placeholder="Buscar empleado por nombre..." onkeyup="filterTable()">
+        
+            <div class="table-container">
+                <table id="employeeTable">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -89,8 +113,28 @@ app.get('/read-data', async (req, res) => {
                         `).join('')}
                     </tbody>
                 </table>
-            </body>
-            </html>
+            </div>
+        
+            <script>
+                function filterTable() {
+                    const input = document.getElementById('search');
+                    const filter = input.value.toLowerCase();
+                    const table = document.getElementById('employeeTable');
+                    const trs = table.querySelectorAll('tbody tr');
+        
+                    trs.forEach(tr => {
+                        const td = tr.querySelectorAll('td')[1];
+                        const txtValue = td.textContent || td.innerText;
+                        if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                            tr.style.display = '';
+                        } else {
+                            tr.style.display = 'none';
+                        }
+                    });
+                }
+            </script>
+        </body>
+        </html>
         `;
         res.send(html);
     } catch (error) {

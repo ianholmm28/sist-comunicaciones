@@ -45,7 +45,7 @@ async function deleteEmployeeById(id) {
 }
 
 // Define the ID of the employee to delete
-const idToDelete = 13; // Change this to the ID of the employee you want to delete
+const idToDelete = 2; // Change this to the ID of the employee you want to delete
 
 // Execute the function to delete the employee by ID
 deleteEmployeeById(idToDelete);

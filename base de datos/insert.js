@@ -17,7 +17,7 @@ async function insertData() {
     // Insert data into the empleados table
     await client.query(`
       INSERT INTO empleados (nombre, edad, puesto) VALUES
-      ('Chatgpt', 4 , 'programador');
+      ('Nicolas castaño', 18 , 'Editor');
     `);
 
     console.log('Data inserted successfully.');
