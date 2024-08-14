@@ -11,6 +11,7 @@ const port = 3000;
 // Middleware para analizar cuerpos JSON
 app.use(express.json());
 
+// Función para leer los datos de la base de datos
 async function readData() {
     const client = new Client({ connectionString });
     try {
@@ -40,13 +41,14 @@ app.get('/read-data', async (req, res) => {
             <style>
                 body {
                     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                    background-color: #f0f4f8;
+                    background-color: #f4f4f9;
                     color: #333;
                     text-align: center;
                     padding: 20px;
+                    margin: 0;
                 }
                 h1 {
-                    color: #444;
+                    color: #333;
                     margin-bottom: 20px;
                 }
                 .table-container {
@@ -79,19 +81,40 @@ app.get('/read-data', async (req, res) => {
                     background-color: #f1f1f1;
                 }
                 input[type="text"] {
-                    margin: 20px 0;
+                    margin: 10px 0;
                     padding: 10px;
-                    width: 50%;
+                    width: calc(100% - 22px);
                     border: 1px solid #ccc;
                     border-radius: 4px;
                     box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.1);
+                    box-sizing: border-box;
+                }
+                button {
+                    padding: 10px 20px;
+                    border: none;
+                    border-radius: 4px;
+                    background-color: #007bff;
+                    color: #fff;
+                    cursor: pointer;
+                    font-size: 16px;
+                    margin: 10px 0;
+                    transition: background-color 0.3s ease;
+                }
+                button:hover {
+                    background-color: #0056b3;
+                }
+                .delete-button {
+                    background-color: #dc3545;
+                }
+                .delete-button:hover {
+                    background-color: #c82333;
                 }
             </style>
         </head>
         <body>
             <h1>Lista de Empleados</h1>
             <input type="text" id="search" placeholder="Buscar empleado por nombre..." onkeyup="filterTable()">
-        
+            
             <div class="table-container">
                 <table id="employeeTable">
                     <thead>
@@ -100,6 +123,7 @@ app.get('/read-data', async (req, res) => {
                             <th>Nombre</th>
                             <th>Edad</th>
                             <th>Puesto</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -109,6 +133,7 @@ app.get('/read-data', async (req, res) => {
                             <td>${emp.nombre}</td>
                             <td>${emp.edad}</td>
                             <td>${emp.puesto}</td>
+                            <td><button class="delete-button" onclick="deleteEmployee(${emp.id})">Eliminar</button></td>
                         </tr>
                         `).join('')}
                     </tbody>
@@ -132,6 +157,18 @@ app.get('/read-data', async (req, res) => {
                         }
                     });
                 }
+
+                async function deleteEmployee(id) {
+                    const response = await fetch(\`/delete-employee/\${id}\`, {
+                        method: 'DELETE'
+                    });
+
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        alert('Error al eliminar empleado.');
+                    }
+                }
             </script>
         </body>
         </html>
@@ -139,6 +176,22 @@ app.get('/read-data', async (req, res) => {
         res.send(html);
     } catch (error) {
         res.status(500).send(`Error: ${error.message}`);
+    }
+});
+
+// Ruta para eliminar empleados
+app.delete('/delete-employee/:id', async (req, res) => {
+    const { id } = req.params;
+    const client = new Client({ connectionString });
+    
+    try {
+        await client.connect();
+        await client.query('DELETE FROM empleados WHERE id = $1', [id]);
+        res.status(200).send('Empleado eliminado');
+    } catch (error) {
+        res.status(500).send(`Error: ${error.message}`);
+    } finally {
+        await client.end();
     }
 });
 
